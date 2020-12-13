@@ -1,0 +1,7 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+login_check:
+  path: /login_check
+admin_login_check:
+  path: /admin/login_check
