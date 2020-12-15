@@ -31,7 +31,7 @@ security:
                 login_path: /admin/login
                 check_path: /admin/login_check
                 default_target_path: /admin/login
-                username_parameter: email
+                username_parameter: username
                 password_parameter: password
             guard:
                 authenticators:

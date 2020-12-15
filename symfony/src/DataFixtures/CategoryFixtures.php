@@ -2,13 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
+use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserFixtures extends Fixture
+class CategoryFixtures extends Fixture
 {
     private $encoder;
 
@@ -22,20 +22,22 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $usersData = [
+        $categoryData = [
             0 => [
-                'email'    => 'user@example.com',
-                'role'     => ['ROLE_USER'],
-                'password' => 123654
+                'name'    => 'Технологии',
+            ],
+            1 => [
+                'name'    => 'Наука',
+            ],
+            2 => [
+                'name'    => 'Авто',
             ]
         ];
 
-        foreach ($usersData as $user) {
-            $newUser = new User();
-            $newUser->setEmail($user['email']);
-            $newUser->setPassword($this->encoder->encodePassword($newUser, $user['password']));
-            $newUser->setRoles($user['role']);
-            $this->em->persist($newUser);
+        foreach ($categoryData as $category) {
+            $newCategory = new Category();
+            $newCategory->setName($category['name']);
+            $this->em->persist($newCategory);
         }
 
         $this->em->flush();

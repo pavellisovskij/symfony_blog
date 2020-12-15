@@ -25,7 +25,7 @@ class AdminFixtures extends Fixture
         $adminsData = [
             0 => [
                 'username' => 'admin',
-                'role' => ['ROLE_ADMIN'],
+                'role'     => ['ROLE_ADMIN'],
                 'password' => 123654
             ]
         ];
