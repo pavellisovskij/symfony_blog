@@ -1,0 +1,9 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <select multiple>
+        {% for category in form.categories %}
+            <option value="{{ form_row(category.id) }}">{{ form_row(category.name) }}</option>
+        {% endfor %}
+    </select>
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
