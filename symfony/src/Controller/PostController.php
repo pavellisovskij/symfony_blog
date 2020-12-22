@@ -32,9 +32,7 @@ class PostController extends AbstractController
     public function new(Request $request): Response
     {
         $post = new Post();
-        $form = $this->createForm(PostType::class, $post, [
-            'categories' => $this->getDoctrine()->getRepository(Category::class)->getAllAsArray()
-        ]);
+        $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

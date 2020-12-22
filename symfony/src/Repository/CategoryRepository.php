@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -20,12 +19,6 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
-    public function getAllAsArray(): array
-    {
-        return $this->createQueryBuilder('c')
-            ->getQuery()
-            ->getArrayResult();
-    }
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */

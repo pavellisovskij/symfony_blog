@@ -19,6 +19,20 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
+    /**
+     * @param string $title
+     * @return Post[] Returns an array of Post objects
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findByTitleUsingLike(string $title)
+    {
+        return $this->createQueryBuilder('p')
+            ->Where('p.title LIKE :title')
+            ->setParameter('title', '%' . $title . '%')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */

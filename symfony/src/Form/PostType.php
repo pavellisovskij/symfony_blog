@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Post;
-use App\Repository\CategoryRepository;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,12 +16,16 @@ class PostType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('content')
+            ->add('content', CKEditorType::class, [
+                'config' =>[
+                    'toolbar' => 'full',
+                    'required' => true
+                ]
+            ])
             ->add('categories', EntityType::class, [
                 'class' => Category::class,
-                'choices' => $options['categories'],
                 'multiple' => true,
-                'choice_label' => 'name'
+                'placeholder' => 'Select the categories...'
             ])
         ;
     }
@@ -30,8 +34,6 @@ class PostType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Post::class,
-            'categories' => true
         ]);
-        $resolver->setAllowedTypes('categories', 'array');
     }
 }

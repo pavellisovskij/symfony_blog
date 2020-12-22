@@ -1,0 +1,22 @@
+{#<form action="{{ path('category_search') }}" method="post">#}
+{#    <div class="input-group">#}
+{#        <input type="text" class="form-control" name="search_field" placeholder="Enter category name...">#}
+{#        <select class="custom-select" aria-label="Search field" name="by">#}
+{#            <option value="1" selected>by category</option>#}
+{#            <option value="2">by post name</option>#}
+{#        </select>#}
+{#        <div class="input-group-append">#}
+{#            <input type="submit" class="btn btn-primary" value="Search">#}
+{#        </div>#}
+{#    </div>#}
+{#</form>#}
+
+{{ form_start(form) }}
+    <div class="input-group">
+        {{ form_widget(form.search_field) }}
+        {{ form_widget(form.by) }}
+        <div class="input-group-append">
+            <input type="submit" class="btn btn-primary" value="Search">
+        </div>
+    </div>
+{{ form_end(form) }}

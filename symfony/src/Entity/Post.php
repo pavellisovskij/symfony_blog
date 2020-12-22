@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class Post
 {
@@ -30,9 +31,24 @@ class Post
     private $content;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Category::class, mappedBy="posts")
+     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="posts")
      */
     private $categories;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $created_at;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updated_at;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $status;
 
     public function __construct()
     {
@@ -68,12 +84,17 @@ class Post
         return $this;
     }
 
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+        return $this;
+    }
     /**
      * @return Collection|Category[]
      */
-    public function getCategories(): Collection
+    public function getCategories(): ?Collection
     {
-        return $this->categories;
+        return $this->categories ?? null;
     }
 
     public function addCategory(Category $category): self
@@ -93,5 +114,57 @@ class Post
         }
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+    * @ORM\PrePersist
+    */
+    public function prePersist()
+    {
+        $this->created_at = new \DateTime("now");
+        $this->updated_at = new \DateTime("now");
+    }
+    /**
+     * @ORM\PreUpdate
+     */
+    public function preUpdate()
+    {
+        $this->updated_at = new \DateTime("now");
     }
 }

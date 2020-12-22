@@ -31,7 +31,7 @@ class Category
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Post::class, inversedBy="categories")
+     * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="categories")
      */
     private $posts;
 
@@ -79,5 +79,10 @@ class Category
         $this->posts->removeElement($post);
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 }

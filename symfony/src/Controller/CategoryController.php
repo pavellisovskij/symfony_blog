@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Post;
 use App\Form\CategoryType;
+use App\Form\SearchCategoryByChoiceType;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,12 +18,59 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     /**
-     * @Route("/", name="category_index", methods={"GET"})
+     * @Route("/", name="category_index", methods={"GET", "POST"})
      */
-    public function index(CategoryRepository $categoryRepository): Response
+    public function index(CategoryRepository $categoryRepository, Request $request): Response
     {
+        $form = $this->createForm(SearchCategoryByChoiceType::class, null, [
+            'action' => $this->generateUrl('category_index'),
+            'method' => 'POST',
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('by')->getData() === 1) {
+                $categories = $this->getDoctrine()
+                    ->getRepository(Category::class)
+                    ->findBy(
+                        ['name' => $form->get('search_field')->getData()],
+                        ['name' => 'ASC']
+                    )
+                ;
+
+                return $this->render('category/index.html.twig', [
+                    'categories' => $categories,
+                    'form' => $form->createView()
+                ]);
+            }
+            elseif ($form->get('by')->getData() === 2) {
+                $posts = $this->getDoctrine()
+                    ->getRepository(Post::class)
+//                    ->findBy(['title' => $form->get('search_field')->getData()])
+                    ->findByTitleUsingLike($form->get('search_field')->getData())
+                ;
+
+                $arrayOfCategories = [];
+                foreach ($posts as $post) {
+                    $arrayOfCategories[] = $post->getCategories()->getValues();
+                }
+
+                $categories = [];
+                foreach ($arrayOfCategories as $element) {
+                    foreach ($element as $category)
+                        $categories[] = $category;
+                }
+
+                return $this->render('category/index.html.twig', [
+                    'categories' => array_unique($categories),
+                    'form' => $form->createView()
+                ]);
+            }
+        }
+
         return $this->render('category/index.html.twig', [
             'categories' => $categoryRepository->findAll(),
+            'form' => $form->createView()
         ]);
     }
 

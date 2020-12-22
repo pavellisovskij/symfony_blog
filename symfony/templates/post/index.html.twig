@@ -10,7 +10,9 @@
             <tr>
                 <th>Id</th>
                 <th>Title</th>
-                <th>Content</th>
+                <th>Created at</th>
+                <th>Update at</th>
+                <th>Status</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -19,7 +21,9 @@
             <tr>
                 <td>{{ post.id }}</td>
                 <td>{{ post.title }}</td>
-                <td>{{ post.content }}</td>
+                <td>{{ post.createdAt|date('d.m.Y H:i:s') }}</td>
+                <td>{{ post.updatedAt|date('d.m.Y H:i:s') }}</td>
+                <td>{{ post.status }}</td>
                 <td>
                     <a href="{{ path('post_show', {'id': post.id}) }}">show</a>
                     <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
