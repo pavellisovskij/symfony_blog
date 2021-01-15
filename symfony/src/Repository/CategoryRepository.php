@@ -19,6 +19,10 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
+    //сделать запрос через иннер из категорий в пост
+
+
+
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */

@@ -16,9 +16,9 @@ class SearchCategoryByChoiceType extends AbstractType
         $builder
             ->add('search_field', TextType::class, [
                 'attr' => [
-                    'maxlength' => 100,
+                    'maxlength' => 255,
                     'required' => true,
-                    'placeholder' => 'Enter category name...'
+                    'placeholder' => 'Enter search query here'
                 ]
             ])
             ->add('by', ChoiceType::class, [
@@ -26,8 +26,9 @@ class SearchCategoryByChoiceType extends AbstractType
                     'required' => true
                 ],
                 'choices' => [
-                    'by category name' => 1,
-                    'by post name' => 2
+                    'search by post title' => 1,
+                    'search by category name' => 2
+
                 ],
                 'choice_attr' => [
                     'by category' => ['selected' => true]

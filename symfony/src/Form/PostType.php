@@ -3,10 +3,14 @@
 namespace App\Form;
 
 use App\Entity\Category;
+use App\Entity\File;
+use App\Entity\Files;
 use App\Entity\Post;
+use CKSource\Bundle\CKFinderBundle\Form\Type\CKFinderFileChooserType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,7 +22,7 @@ class PostType extends AbstractType
             ->add('title')
             ->add('content', CKEditorType::class, [
                 'config' =>[
-                    'toolbar' => 'full',
+                    'toolbar' => 'standard',
                     'required' => true
                 ]
             ])
@@ -26,6 +30,12 @@ class PostType extends AbstractType
                 'class' => Category::class,
                 'multiple' => true,
                 'placeholder' => 'Select the categories...'
+            ])
+            ->add('preview', FileType::class, [
+                'label' => 'Post preview',
+//                'attr' => [
+//                    'class' => 'btn btn-primary'
+//                ]
             ])
         ;
     }

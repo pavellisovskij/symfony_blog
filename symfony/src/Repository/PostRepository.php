@@ -21,7 +21,7 @@ class PostRepository extends ServiceEntityRepository
 
     /**
      * @param string $title
-     * @return Post[] Returns an array of Post objects
+//     * @return Post[] Returns an array of Post objects
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findByTitleUsingLike(string $title)
@@ -29,10 +29,31 @@ class PostRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
             ->Where('p.title LIKE :title')
             ->setParameter('title', '%' . $title . '%')
+            ->orderBy('p.title', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
+
+     /**
+      * @param string $name
+//      * @return Post[] Returns an array of Comment objects
+      */
+    public function findByCategoryName(string $name)
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT p
+                FROM App\Entity\Post p
+                INNER JOIN p.categories c
+                WHERE c.name LIKE :name
+                ORDER BY p.title ASC
+            ')
+            ->setParameter('name', "%$name%")
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */

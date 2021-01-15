@@ -27,4 +27,22 @@
     <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
 
     {{ include('post/_delete_form.html.twig') }}
+
+    {% for comment in post.comments %}
+        <div class="card">
+            <div class="card-header">
+                {{ comment.user.email }}
+            </div>
+            <div class="card-body">
+                {{ comment.body }}
+            </div>
+            <div class="card-footer">
+                <a href="#" class="btn btn-primary">Answer</a>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-secondary" role="alert">
+            There are no comments yet.
+        </div>
+    {% endfor %}
 {% endblock %}

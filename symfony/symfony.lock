@@ -96,6 +96,9 @@
     "egulias/email-validator": {
         "version": "2.1.24"
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.2"
+    },
     "friendsofsymfony/ckeditor-bundle": {
         "version": "2.0",
         "recipe": {
@@ -107,6 +110,12 @@
         "files": [
             "config/packages/fos_ckeditor.yaml"
         ]
+    },
+    "knplabs/knp-components": {
+        "version": "v3.0.0"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.4.2"
     },
     "laminas/laminas-code": {
         "version": "3.5.1"
@@ -122,9 +131,6 @@
     },
     "nikic/php-parser": {
         "version": "v4.10.3"
-    },
-    "ocramius/proxy-manager": {
-        "version": "2.10.0"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
@@ -540,11 +546,5 @@
     },
     "webmozart/assert": {
         "version": "1.9.1"
-    },
-    "zendframework/zend-code": {
-        "version": "3.4.1"
-    },
-    "zendframework/zend-eventmanager": {
-        "version": "3.2.1"
     }
 }

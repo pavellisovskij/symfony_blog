@@ -46,7 +46,6 @@ class CategoryController extends AbstractController
             elseif ($form->get('by')->getData() === 2) {
                 $posts = $this->getDoctrine()
                     ->getRepository(Post::class)
-//                    ->findBy(['title' => $form->get('search_field')->getData()])
                     ->findByTitleUsingLike($form->get('search_field')->getData())
                 ;
 
