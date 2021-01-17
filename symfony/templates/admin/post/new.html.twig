@@ -3,9 +3,9 @@
 {% block title %}New Post{% endblock %}
 
 {% block body %}
+    <a href="{{ path('admin_post_index') }}" class="btn btn-primary mb-2">back to list</a>
+
     <h1>Create new Post</h1>
 
     {{ include('admin/post/_form.html.twig') }}
-
-    <a href="{{ path('admin_post_index') }}">back to list</a>
 {% endblock %}

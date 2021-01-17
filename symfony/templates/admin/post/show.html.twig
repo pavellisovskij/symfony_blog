@@ -3,30 +3,24 @@
 {% block title %}Post{% endblock %}
 
 {% block body %}
-    <h1>Post</h1>
+    <a href="{{ path('admin_post_index') }}" class="btn btn-primary mb-2">back to list</a>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ post.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ post.title }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ post.content|raw }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('admin_post_index') }}">back to list</a>
-
-    <a href="{{ path('admin_post_edit', {'id': post.id}) }}">edit</a>
-
-    {{ include('admin/post/_delete_form.html.twig') }}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title">{{ post.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">ID - {{ post.id }}</h6>
+        </div>
+        {% if post.getFile != null %}
+            <img src="{{ post.getFile.getPath }}" class="card-img-top" alt="{{ post.title }}">
+        {% endif %}
+        <div class="card-body">
+            {{ post.content|raw }}
+        </div>
+        <div class="card-footer">
+            <a href="{{ path('admin_post_edit', {'id': post.id}) }}" class="btn btn-warning mb-2">edit</a>
+            {{ include('admin/post/_delete_form.html.twig') }}
+        </div>
+    </div>
 
     {% for comment in post.comments %}
         <div class="card">

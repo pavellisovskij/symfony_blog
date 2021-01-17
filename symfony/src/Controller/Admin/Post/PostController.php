@@ -10,7 +10,6 @@ use App\Repository\PostRepository;
 use App\Service\FileUploader;
 use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -72,17 +71,22 @@ class PostController extends AbstractController
             'action' => $this->generateUrl('admin_post_new'),
             'method' => 'POST'
         ]);
-        //dd($request);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file = new File();
-            $fileUploader = new FileUploader('../../public/files/post_captions');
-
-            $file->setPath($fileUploader->upload($form->get('preview')->getData()));
             $entityManager = $this->getDoctrine()->getManager();
+
+            if ($form->get('preview')->getData() !== null) {
+                $file = new File();
+                $fileUploader = new FileUploader('/userfiles');
+                $file->setPath($fileUploader->setDir('/post_previews')
+                    ->upload($form->get('preview')->getData())
+                );
+                $post->setFile($file);
+                $entityManager->persist($file);
+            }
+
             $entityManager->persist($post);
-            $entityManager->persist($file);
             $entityManager->flush();
 
             return $this->redirectToRoute('admin_post_index');

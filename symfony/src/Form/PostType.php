@@ -3,16 +3,14 @@
 namespace App\Form;
 
 use App\Entity\Category;
-use App\Entity\File;
-use App\Entity\Files;
 use App\Entity\Post;
-use CKSource\Bundle\CKFinderBundle\Form\Type\CKFinderFileChooserType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File as FileValidator;
 
 class PostType extends AbstractType
 {
@@ -32,10 +30,19 @@ class PostType extends AbstractType
                 'placeholder' => 'Select the categories...'
             ])
             ->add('preview', FileType::class, [
-                'label' => 'Post preview',
-//                'attr' => [
-//                    'class' => 'btn btn-primary'
-//                ]
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new FileValidator([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/bmp',
+                            'image/jpeg',
+                            'image/png'
+                        ],
+                        'mimeTypesMessage' => 'Please upload an image',
+                    ])
+                ],
             ])
         ;
     }

@@ -56,9 +56,9 @@ class Post
     private $comments;
 
     /**
-     * @ORM\OneToOne(targetEntity=File::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=File::class, inversedBy="post", cascade={"persist", "remove"})
      */
-    private $preview;
+    private $file;
 
     public function __construct()
     {
@@ -209,14 +209,14 @@ class Post
         return $this;
     }
 
-    public function getPreview(): ?File
+    public function getFile(): ?File
     {
-        return $this->preview;
+        return $this->file;
     }
 
-    public function setPreview(?File $preview): self
+    public function setFile(?File $file): self
     {
-        $this->preview = $preview;
+        $this->file = $file;
 
         return $this;
     }
