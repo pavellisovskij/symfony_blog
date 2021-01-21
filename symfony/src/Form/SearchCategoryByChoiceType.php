@@ -4,7 +4,6 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -26,12 +25,12 @@ class SearchCategoryByChoiceType extends AbstractType
                     'required' => true
                 ],
                 'choices' => [
-                    'search by post title' => 1,
-                    'search by category name' => 2
+                    'by post title' => 1,
+                    'by category name' => 2
 
                 ],
                 'choice_attr' => [
-                    'by category' => ['selected' => true]
+                    'by category name' => ['selected' => true]
                 ],
             ])
         ;

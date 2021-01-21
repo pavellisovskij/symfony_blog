@@ -21,7 +21,7 @@ class PostRepository extends ServiceEntityRepository
 
     /**
      * @param string $title
-//     * @return Post[] Returns an array of Post objects
+     * @return Post[] Returns an array of Post objects
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findByTitleUsingLike(string $title)

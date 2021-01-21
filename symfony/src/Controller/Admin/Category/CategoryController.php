@@ -3,7 +3,6 @@
 namespace App\Controller\Admin\Category;
 
 use App\Entity\Category;
-use App\Entity\Post;
 use App\Form\CategoryType;
 use App\Form\SearchCategoryByChoiceType;
 use App\Repository\CategoryRepository;
@@ -18,63 +17,40 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     /**
-     * @Route("/", name="index", methods={"GET", "POST"})
+     * @Route("/", name="index", methods={"GET"})
+     * @param CategoryRepository $categoryRepository
+     * @param Request $request
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function index(CategoryRepository $categoryRepository, Request $request): Response
-    {
+    public function index(
+        CategoryRepository $categoryRepository,
+        Request $request
+    ): Response {
         $form = $this->createForm(SearchCategoryByChoiceType::class, null, [
             'action' => $this->generateUrl('admin_category_index'),
-            'method' => 'POST',
+            'method' => 'GET',
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('by')->getData() === 1) {
-                $categories = $this->getDoctrine()
-                    ->getRepository(Category::class)
-                    ->findBy(
-                        ['name' => $form->get('search_field')->getData()],
-                        ['name' => 'ASC']
-                    )
-                ;
-
-                return $this->render('admin/category/index.html.twig', [
-                    'categories' => $categories,
-                    'form' => $form->createView()
-                ]);
+            if ($form->get('by')->getData() === 2) {
+                $query = $categoryRepository->findByNameUsingLike($form->get('search_field')->getData());
+            } elseif ($form->get('by')->getData() === 1) {
+                $query = $categoryRepository->findByPostTitleUsingLike($form->get('search_field')->getData());
             }
-            elseif ($form->get('by')->getData() === 2) {
-                $posts = $this->getDoctrine()
-                    ->getRepository(Post::class)
-                    ->findByTitleUsingLike($form->get('search_field')->getData())
-                ;
-
-                $arrayOfCategories = [];
-                foreach ($posts as $post) {
-                    $arrayOfCategories[] = $post->getCategories()->getValues();
-                }
-
-                $categories = [];
-                foreach ($arrayOfCategories as $element) {
-                    foreach ($element as $category)
-                        $categories[] = $category;
-                }
-
-                return $this->render('admin/category/index.html.twig', [
-                    'categories' => array_unique($categories),
-                    'form' => $form->createView()
-                ]);
-            }
-        }
+        } else $query = $categoryRepository->findAllSorted();
 
         return $this->render('admin/category/index.html.twig', [
-            'categories' => $categoryRepository->findAll(),
+            'categories' => $query,
             'form' => $form->createView()
         ]);
     }
 
     /**
      * @Route("/new", name="new", methods={"GET","POST"})
+     * @param Request $request
+     * @return Response
      */
     public function new(Request $request): Response
     {
@@ -90,7 +66,7 @@ class CategoryController extends AbstractController
             return $this->redirectToRoute('category_index');
         }
 
-        return $this->render('category/new.html.twig', [
+        return $this->render('admin/category/new.html.twig', [
             'category' => $category,
             'form' => $form->createView(),
         ]);
@@ -101,7 +77,7 @@ class CategoryController extends AbstractController
      */
     public function show(Category $category): Response
     {
-        return $this->render('category/show.html.twig', [
+        return $this->render('admin/category/show.html.twig', [
             'category' => $category,
         ]);
     }
@@ -117,10 +93,10 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('category_index');
+            return $this->redirectToRoute('admin_category_index');
         }
 
-        return $this->render('category/edit.html.twig', [
+        return $this->render('admin/category/edit.html.twig', [
             'category' => $category,
             'form' => $form->createView(),
         ]);
@@ -137,6 +113,6 @@ class CategoryController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('category_index');
+        return $this->redirectToRoute('admin_category_index');
     }
 }

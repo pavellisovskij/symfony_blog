@@ -5,6 +5,10 @@
 {% block body %}
     <h1>Category index</h1>
 
+    <div class="btn-group pb-2">
+        <a href="{{ path('admin_category_new') }}" class="btn btn-primary">Create new</a>
+    </div>
+
     {{ include('admin/common/_search_form.html.twig') }}
 
     <table class="table">
@@ -21,8 +25,10 @@
                 <td>{{ category.id }}</td>
                 <td>{{ category.name }}</td>
                 <td>
-                    <a href="{{ path('admin_category_show', {'id': category.id}) }}">show</a>
-                    <a href="{{ path('admin_category_edit', {'id': category.id}) }}">edit</a>
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ path('admin_category_show', {'id': category.id}) }}" class="btn btn-primary">show</a>
+                        <a href="{{ path('admin_category_edit', {'id': category.id}) }}" class="btn btn-warning">edit</a>
+                    </div>
                 </td>
             </tr>
         {% else %}
@@ -32,6 +38,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('admin_category_new') }}">Create new</a>
 {% endblock %}

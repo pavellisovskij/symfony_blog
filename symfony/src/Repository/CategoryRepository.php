@@ -19,36 +19,50 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
-    //сделать запрос через иннер из категорий в пост
-
-
-
-    // /**
-    //  * @return Comment[] Returns an array of Comment objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param string $name
+     * @return Category[] Returns an array of Category objects
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findByNameUsingLike(string $name): array
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
+            ->Where('c.name LIKE :name')
+            ->setParameter('name', "%$name%")
+            ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Comment
+    /**
+     * @param string $title
+     * @return Category[] Returns an array of Category objects
+     */
+    public function findByPostTitleUsingLike(string $title): array
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT c
+                FROM App\Entity\Category c
+                INNER JOIN c.posts p
+                WHERE p.title LIKE :title
+                ORDER BY c.name ASC
+            ')
+            ->setParameter('title', "%$title%")
+            ->getResult()
         ;
     }
-    */
+
+    /**
+     * @return array
+     */
+    public function findAllSorted(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

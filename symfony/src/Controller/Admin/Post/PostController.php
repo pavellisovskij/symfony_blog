@@ -38,7 +38,7 @@ class PostController extends AbstractController
     ): Response {
         $form = $this->createForm(SearchCategoryByChoiceType::class, null, [
             'action' => $this->generateUrl('admin_post_index'),
-            'method' => 'GET',//get
+            'method' => 'GET',
         ]);
         $form->handleRequest($request);
 
