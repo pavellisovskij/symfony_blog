@@ -1,0 +1,29 @@
+{{ form_start(form) }}
+    <div class="card mb-2">
+        <div class="card-header">Common</div>
+        <div class="card-body">
+            {{ form_row(form.brand_name) }}
+            {{ form_row(form.logo) }}
+        </div>
+    </div>
+
+    <div class="card mb-2">
+        <div class="card-header">Comments</div>
+        <div class="card-body">
+            {{ form_row(form.postComment) }}
+            {{ form_row(form.anonComments) }}
+            {{ form_row(form.premoderation) }}
+        </div>
+    </div>
+
+    <div class="card mb-2">
+        <div class="card-header">Contacts</div>
+        <div class="card-body">
+            {{ form_row(form.phone) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.address) }}
+        </div>
+    </div>
+
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

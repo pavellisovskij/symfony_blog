@@ -11,6 +11,7 @@ class FileManager
 {
     private $uploadsDir;
     private $fs;
+    private $dir = 'uploads/';
 
     public function __construct(string $uploadsDir)
     {
@@ -38,7 +39,7 @@ class FileManager
             dd($e->getMessage());
         }
         
-        return $path . $fileName;
+        return $this->dir . $path . $fileName;
     }
 
     /**
