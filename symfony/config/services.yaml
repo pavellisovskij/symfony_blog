@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     userfiles_directory: '%kernel.project_dir%/public/userfiles'
+    uploads_directory: '%kernel.project_dir%/public/uploads'
 
 services:
     # default configuration for services in *this* file
@@ -35,3 +36,7 @@ services:
         arguments:
             $targetDir: '%userfiles_directory%'
             $filesDir: '/userfiles'
+
+    App\Service\FileManager:
+        arguments:
+            $uploadsDir: '%uploads_directory%'
