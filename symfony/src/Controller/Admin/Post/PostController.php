@@ -7,7 +7,7 @@ use App\Entity\Post;
 use App\Form\PostType;
 use App\Form\SearchCategoryByChoiceType;
 use App\Repository\PostRepository;
-use App\Service\FileUploader;
+use App\Service\FileManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -78,10 +78,8 @@ class PostController extends AbstractController
 
             if ($form->get('preview')->getData() !== null) {
                 $file = new File();
-                $fileUploader = new FileUploader('/userfiles');
-                $file->setPath($fileUploader->setDir('/post_previews')
-                    ->upload($form->get('preview')->getData())
-                );
+                $fileManager = new FileManager($this->getParameter('uploads_directory'));
+                $file->setPath($fileManager->upload($form->get('preview')->getData(),'post_previews'));
                 $post->setFile($file);
                 $entityManager->persist($file);
             }
@@ -117,6 +115,14 @@ class PostController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('preview')->getData() !== null) {
+                $fileManager = new FileManager($this->getParameter('uploads_directory'));
+
+                $fileManager->delete($post->getFile()->getPath());
+
+                $post->getFile()->setPath($fileManager->upload($form->get('preview')->getData(),'post_previews'));
+            }
+
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('admin_post_index');

@@ -49,7 +49,7 @@ class FileManager
     public function delete(string $filePath): bool
     {
         try {
-            $this->fs->remove($this->uploadsDir . '/' . $filePath);
+            $this->fs->remove($this->uploadsDir . mb_substr($filePath, mb_strlen($this->dir)));
             return true;
         } catch (ExceptionInterface $e) {
             dd($e->getMessage());

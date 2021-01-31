@@ -11,7 +11,7 @@
             <h6 class="card-subtitle mb-2 text-muted">ID - {{ post.id }}</h6>
         </div>
         {% if post.getFile != null %}
-            <img src="{{ post.getFile.getPath }}" class="card-img-top" alt="{{ post.title }}">
+            <img src="{{ asset(post.getFile.getPath) }}" class="card-img-top" alt="{{ post.title }}">
         {% endif %}
         <div class="card-body">
             {{ post.content|raw }}
