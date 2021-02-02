@@ -23,12 +23,7 @@ class Comment
     private $message;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $body;
-
-    /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true, options={"default" : null})
      */
     private $allowed;
 
@@ -43,6 +38,11 @@ class Comment
      */
     private $post;
 
+    /**
+     * @ORM\Column(type="integer", options={"default" : 0})
+     */
+    private $parentComment;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -56,18 +56,6 @@ class Comment
     public function setMessage(?string $message): self
     {
         $this->message = $message;
-
-        return $this;
-    }
-
-    public function getBody(): ?string
-    {
-        return $this->body;
-    }
-
-    public function setBody(string $body): self
-    {
-        $this->body = $body;
 
         return $this;
     }
@@ -104,6 +92,18 @@ class Comment
     public function setPost(?Post $post): self
     {
         $this->post = $post;
+
+        return $this;
+    }
+
+    public function getParentComment(): ?int
+    {
+        return $this->parentComment;
+    }
+
+    public function setParentComment(int $parentComment): self
+    {
+        $this->parentComment = $parentComment;
 
         return $this;
     }

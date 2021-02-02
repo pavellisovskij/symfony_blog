@@ -91,4 +91,26 @@ class CommentController extends AbstractController
 
         return $this->redirectToRoute('comment_index');
     }
+
+    /**
+     * @Route("/{id}/allow", name="allow", methods={"get"})
+     */
+    public function allow(Comment $comment): Response
+    {
+        $comment->setAllowed(true);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('admin_post_show', ['id' => $comment->getPost()->getId()]);
+    }
+
+    /**
+     * @Route("/{id}/ban", name="ban", methods={"get"})
+     */
+    public function ban(Comment $comment): Response
+    {
+        $comment->setAllowed(false);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('admin_post_show', ['id' => $comment->getPost()->getId()]);
+    }
 }

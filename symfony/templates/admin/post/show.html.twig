@@ -22,17 +22,38 @@
         </div>
     </div>
 
+    {% if config.getPremoderation == false  %}
+        <div class="alert alert-secondary" role="alert">
+            pre-moderation disabled.
+        </div>
+    {% endif %}
+
     {% for comment in post.comments %}
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-header">
                 {{ comment.user.email }}
             </div>
             <div class="card-body">
-                {{ comment.body }}
+                {{ comment.message }}
             </div>
-            <div class="card-footer">
-                <a href="#" class="btn btn-primary">Answer</a>
-            </div>
+            {% if config.getPremoderation is same as(true) %}
+                <div class="card-footer">
+                    {% if comment.allowed is same as(true) %}
+                        <div class="alert alert-success" role="alert">
+                            allowed
+                        </div>
+                    {% elseif comment.allowed is same as(false) %}
+                        <div class="alert alert-danger" role="alert">
+                            baned
+                        </div>
+                    {% elseif comment.allowed is same as(null) %}
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a href="{{ path('admin_comment_allow', {'id': comment.id}) }}" class="btn btn-success">allow</a>
+                            <a href="{{ path('admin_comment_ban', {'id': comment.id}) }}" class="btn btn-danger">ban</a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
     {% else %}
         <div class="alert alert-secondary" role="alert">
