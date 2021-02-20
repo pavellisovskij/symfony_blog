@@ -25,7 +25,7 @@ class Category
      * @Assert\Length(
      *      min = 1,
      *      max = 100
- *     )
+     * )
      * @ORM\Column(type="string", length=100)
      */
     private $name;
@@ -69,16 +69,20 @@ class Category
     {
         if (!$this->posts->contains($post)) {
             $this->posts[] = $post;
+            $post->addCategory($this);
         }
 
         return $this;
     }
 
-    public function removePost(Post $post): self
+    public function removePost(Post $post)//: self
     {
-        $this->posts->removeElement($post);
+        if (!$this->posts->contains($post)) {
+            return;
+        }
 
-        return $this;
+        $this->posts->removeElement($post);
+        $post->removeCategory($this);
     }
 
     public function __toString()

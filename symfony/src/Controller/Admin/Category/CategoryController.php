@@ -3,9 +3,12 @@
 namespace App\Controller\Admin\Category;
 
 use App\Entity\Category;
+use App\Entity\Post;
+use App\Form\AddPostToCategoryType;
 use App\Form\CategoryType;
 use App\Form\SearchCategoryByChoiceType;
 use App\Repository\CategoryRepository;
+use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -63,7 +66,7 @@ class CategoryController extends AbstractController
             $entityManager->persist($category);
             $entityManager->flush();
 
-            return $this->redirectToRoute('category_index');
+            return $this->redirectToRoute('admin_category_index');
         }
 
         return $this->render('admin/category/new.html.twig', [
@@ -73,12 +76,32 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="show", methods={"GET"})
+     * @Route("/{id}", name="show", methods={"GET", "POST"})
      */
-    public function show(Category $category): Response
+    public function show(Category $category, Request $request, PostRepository $postRepository): Response
     {
+        $form = $this->createForm(AddPostToCategoryType::class, null, [
+            'action' => $this->generateUrl('admin_category_show', ['id' => $category->getId()]),
+            'method' => 'POST',
+            'category_id' => $category->getId()
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post = $postRepository->find($form->get('title')->getData());
+            $category->addPost($post);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($category);
+            $entityManager->flush();
+            $this->addFlash('post_status', 'Post "' . $post->getTitle() . '" added to ' . $category->getName());
+
+            return $this->redirectToRoute('admin_category_show', ['id' => $category->getId()]);
+        }
+
         return $this->render('admin/category/show.html.twig', [
             'category' => $category,
+            'form' => $form->createView()
         ]);
     }
 
@@ -114,5 +137,21 @@ class CategoryController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_category_index');
+    }
+
+    /**
+     * @Route("/{category}/post/{post}/remove", name="remove_post", methods={"GET"})
+     */
+    public function removePost(Category $category, Post $post): Response
+    {
+        $category->removePost($post);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($category);
+        $entityManager->flush();
+        $this->addFlash('post_status', 'Post "' . $post->getTitle() . '" removed from ' . $category->getName());
+
+        return $this->redirectToRoute('admin_category_show', [
+            'id' => $category->getId()
+        ]);
     }
 }

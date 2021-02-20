@@ -5,6 +5,14 @@
 {% block body %}
     <a href="{{ path('admin_category_index') }}" class="btn btn-primary mb-2">back to list</a>
 
+    {{ include('admin/category/_add_post_form.html.twig') }}
+
+    {% for message in app.flashes('post_status') %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+
     <div class="card mb-4">
         <div class="card-header">
             <h5 class="card-title">{{ category.name }}</h5>
@@ -13,7 +21,14 @@
         <ul class="list-group list-group-flush">
             {% for post in category.posts %}
                 <li class="list-group-item">
-                    <a href="{{ path('admin_post_show', {'id': post.id}) }}">{{ post.title }}</a>
+                    <div class="row">
+                        <div class="col-11">
+                            <a href="{{ path('admin_post_show', {'id': post.id}) }}">{{ post.title }}</a>
+                        </div>
+                        <div class="col-1">
+                            <a href="{{ path('admin_category_remove_post', {'category': category.id, 'post': post.id}) }}"><span data-feather="minus"></span></a>
+                        </div>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
@@ -22,4 +37,11 @@
             {{ include('admin/category/_delete_form.html.twig') }}
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        feather.replace()
+    </script>
 {% endblock %}

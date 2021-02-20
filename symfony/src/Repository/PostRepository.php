@@ -37,7 +37,6 @@ class PostRepository extends ServiceEntityRepository
 
      /**
       * @param string $name
-//      * @return Post[] Returns an array of Comment objects
       */
     public function findByCategoryName(string $name)
     {

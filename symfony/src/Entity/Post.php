@@ -118,13 +118,14 @@ class Post
         return $this;
     }
 
-    public function removeCategory(Category $category): self
+    public function removeCategory(Category $category)//: self
     {
-        if ($this->categories->removeElement($category)) {
-            $category->removePost($this);
+        if (!$this->categories->contains($category)) {
+            return;
         }
 
-        return $this;
+        $this->categories->removeElement($category);
+        $category->removePost($this);
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
@@ -219,5 +220,10 @@ class Post
         $this->file = $file;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->title;
     }
 }
