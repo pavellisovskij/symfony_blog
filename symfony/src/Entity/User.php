@@ -41,6 +41,11 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $blocked;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -150,6 +155,23 @@ class User implements UserInterface
                 $comment->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return '';
+    }
+
+    public function getBlocked(): ?\DateTimeInterface
+    {
+        return $this->blocked;
+    }
+
+    public function setBlocked(?\DateTimeInterface $blocked): self
+    {
+        $this->blocked = $blocked;
 
         return $this;
     }
