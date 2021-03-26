@@ -40,3 +40,11 @@ services:
     App\Service\FileManager:
         arguments:
             $uploadsDir: '%uploads_directory%'
+
+    App\Service\MenuBuilder:
+        class: App\Service\MenuBuilder
+        arguments: [ "@knp_menu.factory" ]
+        tags:
+            - { name: knp_menu.menu_builder, method: createAdminSidebarMenu, alias: adminsidebar } # The alias is what is used to retrieve the menu
+            - { name: knp_menu.menu_builder, method: createMainMenu, alias: mainmenu }
+            - { name: knp_menu.menu_builder, method: createUserSidebarCategories, alias: usercategories }

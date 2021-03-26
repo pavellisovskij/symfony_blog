@@ -1,0 +1,19 @@
+{% extends 'admin/admin.html.twig' %}
+
+{% block title %}Edit Menu{% endblock %}
+
+{% block body %}
+    <h1>Edit Menu</h1>
+
+    <div class="row">
+        <div class="col-6">
+            {{ include('admin/menu/_add_to_menu_form.html.twig') }}
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">menu scheme </div>
+                <div class="card-body">{{ knp_menu_render('mainmenu') }}</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -19,14 +19,11 @@
 
         <div class="container-fluid">
             <div class="row">
-                <div class="col-2 col-lg-1">
-                    <nav class="nav flex-column nav-pills">
-                        <a class="nav-link" href="{{ path('admin_category_index') }}">Categories</a>
-                        <a class="nav-link" href="{{ path('admin_post_index') }}">Posts</a>
-                    </nav>
+                <div class="col-2">
+                    {{ knp_menu_render('adminsidebar') }}
                 </div>
 
-                <div class="col-10 col-lg-11">
+                <div class="col-10">
                     {% block body %}{% endblock %}
                 </div>
             </div>
