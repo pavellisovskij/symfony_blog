@@ -39,18 +39,23 @@ class PostController extends AbstractController
         $form = $this->createForm(SearchCategoryByChoiceType::class, null, [
             'action' => $this->generateUrl('admin_post_index'),
             'method' => 'GET',
+            'type'   => 'post'
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('by')->getData() === 2) {
-                $query = $postRepository->findByCategoryName($form->get('search_field')->getData());
-            } elseif ($form->get('by')->getData() === 1) {
+            if ($form->get('by')->getData() === 1) {
                 $query = $postRepository->findByTitleUsingLike($form->get('search_field')->getData());
+            } elseif ($form->get('by')->getData() === 2) {
+                $query = $postRepository->findByContent($form->get('search_field')->getData());
+            } elseif ($form->get('by')->getData() === 3) {
+                $query = $postRepository->findByUser($form->get('search_field')->getData());
+            } elseif ($form->get('by')->getData() === 4) {
+                $query = $postRepository->findByRating($form->get('search_field')->getData());
             }
         } else $query = $postRepository->findAll();
 
-        $pagination = $paginator->paginate($query, $page, 5);
+        $pagination = $paginator->paginate($query, $page, 10);
         $pagination->setCustomParameters([
             'align' => 'center'
         ]);
@@ -84,6 +89,7 @@ class PostController extends AbstractController
                 $entityManager->persist($file);
             }
 
+            $post->setAdmin($this->getUser());
             $entityManager->persist($post);
             $entityManager->flush();
 

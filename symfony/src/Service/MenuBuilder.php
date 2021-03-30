@@ -34,11 +34,11 @@ class MenuBuilder
         $menu = $this->factory->createItem('root');
 
         $menu->addChild('Posts', ['route' => 'user_post_all']);
+        $menu->addChild('Categories', ['route' => 'user_category_index']);
 
         foreach ($menuItems as $item) {
-            $menu->addChild($item->getPage()->getTitle(),
-                //['route' => $item->getPage()->getLink()]
-                ['uri' => $item->getPage()->getLink()]
+            $menu->addChild($item->getPage()->getTitle(), [
+                'uri' => $item->getPage()->getLink()]
             );
         }
 

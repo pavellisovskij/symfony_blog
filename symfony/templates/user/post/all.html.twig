@@ -1,16 +1,16 @@
-{% extends 'user/1-column.html.twig' %}
+{% extends 'user/2-columns.html.twig' %}
 
-{% block title %}Main posts{% endblock %}
+{% block title %}All posts{% endblock %}
 
 {% block body %}
-    <h1>Main posts</h1>
+    <h1>Posts</h1>
 
     {% for post in pagination %}
         <div class="card mt-2 mb-3">
             <div class="card-header">
                 <h5 class="card-title">{{ post.title }}</h5>
                 {% for category in post.getCategories %}
-                    <a href="{{ path('user_category_show', {'id': category.id}) }}" class="card-link">{{ category.name }}</a>
+                    <a href="{{ path('user_category_show', {'id': category.id}) }} }" class="card-link">{{ category.name }}</a>
                 {% endfor %}
             </div>
 
@@ -47,5 +47,6 @@
             there aren't posts yet
         </div>
     {% endfor %}
-
 {% endblock %}
+
+{% block sidebar %}{{ knp_menu_render('usercategories') }}{% endblock %}

@@ -1,37 +1,16 @@
-{% extends 'base.html.twig' %}
+{% extends 'user/1-column.html.twig' %}
 
-{% block title %}Category index{% endblock %}
+{% block title %}Categories{% endblock %}
 
 {% block body %}
-    <h1>Category index</h1>
+    <h1>Categories</h1>
 
-    {{ include('common/_search_form.html.twig') }}
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for category in categories %}
-            <tr>
-                <td>{{ category.id }}</td>
-                <td>{{ category.name }}</td>
-                <td>
-                    <a href="{{ path('category_show', {'id': category.id}) }}">show</a>
-                    <a href="{{ path('category_edit', {'id': category.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
+    <ul class="list-group mt-3">
+        {% for category in pagination %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a class="stretched-link" href="{{ path('user_category_show', {'id': category.id}) }}">{{ category.name }}</a>
+                    <span class="badge badge-primary badge-pill">{{ category.getPosts|length }}</span>
+                </li>
         {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('category_new') }}">Create new</a>
+    </ul>
 {% endblock %}

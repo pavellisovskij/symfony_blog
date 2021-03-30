@@ -1,48 +1,54 @@
-{% extends 'base.html.twig' %}
+{% extends 'user/2-columns.html.twig' %}
 
-{% block title %}Post{% endblock %}
+{% block title %}{{ post.title }}{% endblock %}
 
 {% block body %}
-    <h1>Post</h1>
+    <h1>{{ post.title }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ post.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ post.title }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ post.content|raw }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <ul class="list-inline">
+        <li class="list-inline-item">author: {{ post.admin.username }}</li>
+        <li class="list-inline-item">created: {{ post.createdAt|date('d.m.Y H:i:s') }}</li>
+        <li class="list-inline-item">
+            rate:
+            {{ post.numberOfGrades == 0 ? 0 : post.sumOfGrades / post.numberOfGrades }}
+        </li>
+    </ul>
 
-    <a href="{{ path('post_index') }}">back to list</a>
+    {% set file = post.getFile %}
+    {% if file != null %}
+        <img src="{{ asset(file.path) }}" class="img-fluid" alt="{{ post.title }}">
+    {% else %}
+        <hr>
+    {% endif %}
 
-    <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
 
-    {{ include('post/_delete_form.html.twig') }}
-
-    {% for comment in post.comments %}
-        <div class="card">
-            <div class="card-header">
-                {{ comment.user.email }}
-            </div>
-            <div class="card-body">
-                {{ comment.body }}
-            </div>
-            <div class="card-footer">
-                <a href="#" class="btn btn-primary">Answer</a>
-            </div>
+    {% if post.onlyForRegistered and not app.user %}
+        <div class="card-body bg-secondary text-center">
+            this post is for registered users.
+            <a href="{{ path('app_login') }}" class="card-link">sign in</a> to read.
         </div>
     {% else %}
-        <div class="alert alert-secondary" role="alert">
-            There are no comments yet.
-        </div>
-    {% endfor %}
+        {{ post.content|raw }}
+        <hr>
+
+{#        {% for comment in post.comments %}#}
+{#            <div class="card">#}
+{#                <div class="card-header">#}
+{#                    {{ comment.user.email }}#}
+{#                </div>#}
+{#                <div class="card-body">#}
+{#                    {{ comment.body }}#}
+{#                </div>#}
+{#                <div class="card-footer">#}
+{#                    <a href="#" class="btn btn-primary">Answer</a>#}
+{#                </div>#}
+{#            </div>#}
+{#        {% else %}#}
+{#            <div class="alert alert-secondary" role="alert">#}
+{#                There are no comments yet.#}
+{#            </div>#}
+{#        {% endfor %}#}
+    {% endif %}
 {% endblock %}
+
+{% block sidebar %}{{ knp_menu_render('usercategories') }}{% endblock %}

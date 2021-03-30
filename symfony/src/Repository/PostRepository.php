@@ -53,6 +53,83 @@ class PostRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findByContent(string $str)
+    {
+        return $this->createQueryBuilder('p')
+            ->Where('p.content LIKE :str')
+            ->setParameter('str', '%' . $str . '%')
+            ->orderBy('p.title', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findByUser(string $username)
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT p
+                FROM App\Entity\Post p
+                INNER JOIN p.admin a
+                WHERE a.username LIKE :username
+                ORDER BY p.title ASC
+            ')
+            ->setParameter('username', "%$username%")
+            ->getResult()
+        ;
+    }
+
+    public function findByRating(int $grade)
+    {
+        switch ($grade) {
+            case 0:
+                $str = "WHERE (p.sum_of_grades / p.number_of_grades >= 0.0000 
+                        AND p.sum_of_grades / p.number_of_grades <= 0.9999)
+                        OR p.number_of_grades = 0";
+                break;
+            case 1:
+                $str = "WHERE p.sum_of_grades / p.number_of_grades >= 1.000 
+                        AND p.sum_of_grades / p.number_of_grades <= 1.9999";
+                break;
+            case 2:
+                $str = "WHERE p.sum_of_grades / p.number_of_grades >= 2.0000 
+                        AND p.sum_of_grades / p.number_of_grades <= 2.9999";
+                break;
+            case 3:
+                $str = "WHERE p.sum_of_grades / p.number_of_grades >= 3.0000 
+                AND p.sum_of_grades / p.number_of_grades <= 3.9999";
+                break;
+            case 4:
+                $str = "WHERE p.sum_of_grades / p.number_of_grades >= 4.0000 
+                AND p.sum_of_grades / p.number_of_grades <= 4.9999";
+                break;
+            case 5:
+                $str = "WHERE p.sum_of_grades / p.number_of_grades = 5";
+                break;
+            default:
+                $str = "WHERE p.sum_of_grades / p.number_of_grades IS NULL";
+        }
+
+        return $this->getEntityManager()->createQuery("
+                SELECT p
+                FROM App\Entity\Post p
+                $str
+                ORDER BY p.title ASC
+            ")
+            ->getResult()
+        ;
+    }
+
+    public function findAllAndSortByDate()
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.status = 1')
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */

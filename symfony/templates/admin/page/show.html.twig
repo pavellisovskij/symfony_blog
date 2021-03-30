@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<title>Page</title>
+
+{% block body %}
+    <h1>Page</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ page.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ page.title }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ page.content }}</td>
+            </tr>
+            <tr>
+                <th>Link</th>
+                <td>{{ page.link }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ page.createdAt ? page.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated_at</th>
+                <td>{{ page.updatedAt ? page.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ page.status ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin_page_index') }}">back to list</a>
+
+    <a href="{{ path('admin_page_edit', {'id': page.id}) }}">edit</a>
+
+    {{ include('admin/page/_delete_form.html.twig') }}
+{% endblock %}

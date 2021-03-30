@@ -33,6 +33,7 @@ class CategoryController extends AbstractController
         $form = $this->createForm(SearchCategoryByChoiceType::class, null, [
             'action' => $this->generateUrl('admin_category_index'),
             'method' => 'GET',
+            'type' => 'category'
         ]);
         $form->handleRequest($request);
 

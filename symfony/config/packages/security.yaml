@@ -30,7 +30,7 @@ security:
             form_login:
                 login_path: /admin/login
                 check_path: /admin/login_check
-                default_target_path: /admin/login
+                default_target_path: /admin/category/
                 username_parameter: username
                 password_parameter: password
             guard:

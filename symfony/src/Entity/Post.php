@@ -60,6 +60,32 @@ class Post
      */
     private $file;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Admin::class, inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $admin;
+
+    /**
+     * @ORM\Column(type="integer", options={"default" : 0})
+     */
+    private $sum_of_grades;
+
+    /**
+     * @ORM\Column(type="integer", options={"default" : 0})
+     */
+    private $number_of_grades;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $main_page;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $only_for_registered;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -171,6 +197,8 @@ class Post
     {
         $this->created_at = new \DateTime("now");
         $this->updated_at = new \DateTime("now");
+        $this->number_of_grades = 0;
+        $this->sum_of_grades = 0;
     }
     /**
      * @ORM\PreUpdate
@@ -225,5 +253,65 @@ class Post
     public function __toString()
     {
         return $this->title;
+    }
+
+    public function getAdmin(): ?Admin
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(?Admin $admin): self
+    {
+        $this->admin = $admin;
+
+        return $this;
+    }
+
+    public function getSumOfGrades(): ?int
+    {
+        return $this->sum_of_grades;
+    }
+
+    public function setSumOfGrades(int $sum_of_grades): self
+    {
+        $this->sum_of_grades = $sum_of_grades;
+
+        return $this;
+    }
+
+    public function getNumberOfGrades(): ?int
+    {
+        return $this->number_of_grades;
+    }
+
+    public function setNumberOfGrades(int $number_of_grades): self
+    {
+        $this->number_of_grades = $number_of_grades;
+
+        return $this;
+    }
+
+    public function getMainPage(): ?bool
+    {
+        return $this->main_page;
+    }
+
+    public function setMainPage(bool $main_page): self
+    {
+        $this->main_page = $main_page;
+
+        return $this;
+    }
+
+    public function getOnlyForRegistered(): ?bool
+    {
+        return $this->only_for_registered;
+    }
+
+    public function setOnlyForRegistered(bool $only_for_registered): self
+    {
+        $this->only_for_registered = $only_for_registered;
+
+        return $this;
     }
 }

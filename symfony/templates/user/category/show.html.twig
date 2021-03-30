@@ -1,26 +1,52 @@
-{% extends 'base.html.twig' %}
+{% extends 'user/2-columns.html.twig' %}
 
-{% block title %}Category{% endblock %}
+{% block title %}{{ category.name }}{% endblock %}
 
 {% block body %}
-    <h1>Category</h1>
+    <h1 class="mb-3">{{ category.name }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ category.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ category.name }}</td>
-            </tr>
-        </tbody>
-    </table>
+    {% for post in pagination %}
+        <div class="card mt-2 mb-3">
+            <div class="card-header">
+                <h5 class="card-title">{{ post.title }}</h5>
+                {% for category in post.getCategories %}
+                    <a href="{{ path('user_category_show', {'id': category.id}) }}" class="card-link">{{ category.name }}</a>
+                {% endfor %}
+            </div>
 
-    <a href="{{ path('category_index') }}">back to list</a>
+            {% set file = post.getFile %}
+            {% if file != null %}
+                <img src="{{ asset(file.path) }}" class="card-img" alt="{{ post.title }}">
+            {% endif %}
 
-    <a href="{{ path('category_edit', {'id': category.id}) }}">edit</a>
+            {% if post.onlyForRegistered and not app.user %}
+                <div class="card-body bg-secondary text-center">
+                    this post is for registered users.
+                    <a href="{{ path('app_login') }}" class="card-link">sign in</a> to read.
+                </div>
+            {% else %}
+                <div class="card-body">
+                    {{ post.content|slice(0, 100)|raw }}
+                    <a href="{{ path('user_post_show', {'id': post.id}) }}" class="card-link">read</a>
+                </div>
+            {% endif %}
 
-    {{ include('category/_delete_form.html.twig') }}
+            <div class="card-footer">
+                <ul class="list-inline">
+                    <li class="list-inline-item">author: {{ post.admin.username }}</li>
+                    <li class="list-inline-item">created: {{ post.createdAt|date('d.m.Y H:i:s') }}</li>
+                    <li class="list-inline-item">
+                        rate:
+                        {{ post.numberOfGrades == 0 ? 0 : post.sumOfGrades / post.numberOfGrades }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-secondary" role="alert">
+            there aren't posts yet
+        </div>
+    {% endfor %}
 {% endblock %}
+
+{% block sidebar %}{{ knp_menu_render('usercategories') }}{% endblock %}

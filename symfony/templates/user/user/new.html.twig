@@ -1,0 +1,15 @@
+{% extends 'user/1-column.html.twig' %}
+
+{% block title %}New User{% endblock %}
+
+{% block body %}
+    <h1>Create new User</h1>
+
+    {% for message in app.flashes('bad_password') %}
+        <div class="flash-notice">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {{ include('user/user/_new_user_form.html.twig') }}
+{% endblock %}
