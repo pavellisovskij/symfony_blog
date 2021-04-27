@@ -65,16 +65,16 @@ class Post
      * @ORM\JoinColumn(nullable=false)
      */
     private $admin;
-
-    /**
-     * @ORM\Column(type="integer", options={"default" : 0})
-     */
-    private $sum_of_grades;
-
-    /**
-     * @ORM\Column(type="integer", options={"default" : 0})
-     */
-    private $number_of_grades;
+//
+//    /**
+//     * @ORM\Column(type="integer", options={"default" : 0})
+//     */
+//    private $sum_of_grades;
+//
+//    /**
+//     * @ORM\Column(type="integer", options={"default" : 0})
+//     */
+//    private $number_of_grades;
 
     /**
      * @ORM\Column(type="boolean")
@@ -86,10 +86,22 @@ class Post
      */
     private $only_for_registered;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="favorites")
+     */
+    private $users;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="post", orphanRemoval=true)
+     */
+    private $ratings;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -267,29 +279,29 @@ class Post
         return $this;
     }
 
-    public function getSumOfGrades(): ?int
-    {
-        return $this->sum_of_grades;
-    }
-
-    public function setSumOfGrades(int $sum_of_grades): self
-    {
-        $this->sum_of_grades = $sum_of_grades;
-
-        return $this;
-    }
-
-    public function getNumberOfGrades(): ?int
-    {
-        return $this->number_of_grades;
-    }
-
-    public function setNumberOfGrades(int $number_of_grades): self
-    {
-        $this->number_of_grades = $number_of_grades;
-
-        return $this;
-    }
+//    public function getSumOfGrades(): ?int
+//    {
+//        return $this->sum_of_grades;
+//    }
+//
+//    public function setSumOfGrades(int $sum_of_grades): self
+//    {
+//        $this->sum_of_grades = $sum_of_grades;
+//
+//        return $this;
+//    }
+//
+//    public function getNumberOfGrades(): ?int
+//    {
+//        return $this->number_of_grades;
+//    }
+//
+//    public function setNumberOfGrades(int $number_of_grades): self
+//    {
+//        $this->number_of_grades = $number_of_grades;
+//
+//        return $this;
+//    }
 
     public function getMainPage(): ?bool
     {
@@ -311,6 +323,62 @@ class Post
     public function setOnlyForRegistered(bool $only_for_registered): self
     {
         $this->only_for_registered = $only_for_registered;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addFavorite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user)//: self
+    {
+        if ($this->users->contains($user)) {
+        $this->users->removeElement($user);
+        $user->removeFavorite($this);
+    }
+    }
+
+    /**
+     * @return Collection|Rating[]
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings[] = $rating;
+            $rating->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getPost() === $this) {
+                $rating->setPost(null);
+            }
+        }
 
         return $this;
     }

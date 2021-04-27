@@ -5,8 +5,8 @@
 {% block body %}
     <h1>Create new User</h1>
 
-    {% for message in app.flashes('bad_password') %}
-        <div class="flash-notice">
+    {% for message in app.flashes('wrong_pass') %}
+        <div class="alert alert-danger" role="alert">
             {{ message }}
         </div>
     {% endfor %}

@@ -8,7 +8,29 @@
     {% for post in pagination %}
         <div class="card mt-2 mb-3">
             <div class="card-header">
-                <h5 class="card-title">{{ post.title }}</h5>
+                <ul class="list-inline">
+                    {% if app.user %}
+                        <li class="list-inline-item">
+                            {% if app.user.getFavorites.contains(post) %}
+                                <i class="bi bi-bookmark-star-fill"
+                                   id="favorite-{{ post.id }}"
+                                   onclick="favorite({{ post.id }})"
+                                   role="img"
+                                   style="cursor: pointer; color: red; font-size: 1.5rem;"
+                                ></i>
+                            {% else %}
+                                <i class="bi bi-bookmark-star"
+                                   id="favorite-{{ post.id }}"
+                                   onclick="favorite({{ post.id }})"
+                                   role="img"
+                                   style="cursor: pointer; color: currentColor; font-size: 1.5rem;"
+                                ></i>
+                            {% endif %}
+                        </li>
+                    {% endif %}
+                    <li class="list-inline-item"><h5 class="card-title">{{ post.title }}</h5></li>
+                </ul>
+
                 {% for category in post.getCategories %}
                     <a href="{{ path('user_category_show', {'id': category.id}) }} }" class="card-link">{{ category.name }}</a>
                 {% endfor %}
@@ -50,3 +72,10 @@
 {% endblock %}
 
 {% block sidebar %}{{ knp_menu_render('usercategories') }}{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js">
+        const axios = require('axios').default;
+    </script>
+    <script src="{{ asset('js/favorite.js') }}"></script>
+{% endblock %}

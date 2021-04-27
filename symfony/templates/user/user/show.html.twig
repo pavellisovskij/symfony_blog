@@ -1,0 +1,13 @@
+{% extends 'user/1-column.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+    <h1>{{ user.getUsername }}</h1>
+
+    {% if user.blocked != null and user.blocked|date('d.m.Y H:i:s') < "now"|date('d.m.Y H:i:s') %}
+        <p>blocked until {{ user.blocked }}</p>
+    {% else %}
+        <p>active</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'user/1-column.html.twig' %}
+
+{% block title %}Favorite posts{% endblock %}
+
+{% block body %}
+    <h1>Favorite posts</h1>
+
+    {% for post in pagination %}
+        <div class="card mt-2 mb-3">
+            <div class="card-header">
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <i class="bi bi-bookmark-star-fill"
+                           id="favorite-{{ post.id }}"
+                           onclick="favorite({{ post.id }})"
+                           role="img"
+                           style="cursor: pointer; color: red; font-size: 1.5rem;"
+                        ></i>
+                    </li>
+                    <li class="list-inline-item"><h5 class="card-title">{{ post.title }}</h5></li>
+                </ul>
+
+                {% for category in post.getCategories %}
+                    <a href="{{ path('user_category_show', {'id': category.id}) }}" class="card-link">{{ category.name }}</a>
+                {% endfor %}
+            </div>
+
+            {% set file = post.getFile %}
+            {% if file != null %}
+                <img src="{{ asset(file.path) }}" class="card-img" alt="{{ post.title }}">
+            {% endif %}
+
+            <div class="card-body">
+                {{ post.content|slice(0, 100)|raw }}
+                <a href="{{ path('user_post_show', {'id': post.id}) }}" class="card-link">read</a>
+            </div>
+
+            <div class="card-footer">
+                <ul class="list-inline">
+                    <li class="list-inline-item">author: {{ post.admin.username }}</li>
+                    <li class="list-inline-item">created: {{ post.createdAt|date('d.m.Y H:i:s') }}</li>
+                    <li class="list-inline-item">
+                        rate: {{ post.numberOfGrades == 0 ? 0 : post.sumOfGrades / post.numberOfGrades }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-secondary" role="alert">
+            there aren't posts yet
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js">
+        const axios = require('axios').default;
+    </script>
+    <script src="{{ asset('js/favorite.js') }}"></script>
+{% endblock %}

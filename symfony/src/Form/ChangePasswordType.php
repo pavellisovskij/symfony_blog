@@ -9,22 +9,24 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class NewUserType extends AbstractType
+class ChangePasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email', EmailType::class, [
+            ->add('old_password', PasswordType::class, [
                 'attr' => [
                     'required' => true
                 ],
+                'mapped' => false
             ])
-            ->add('password', PasswordType::class, [
+            ->add('new_password', PasswordType::class, [
                 'attr' => [
                     'required' => true
-                ]
+                ],
+                'mapped' => false
             ])
-            ->add('retry_password', PasswordType::class, [
+            ->add('retry_new_password', PasswordType::class, [
                 'attr' => [
                     'required' => true
                 ],
