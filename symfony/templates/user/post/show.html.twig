@@ -3,16 +3,48 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block body %}
-    <h1>{{ post.title }}</h1>
+    <ul class="list-inline">
+        {% if app.user %}
+            <li class="list-inline-item">
+                {% if app.user.getFavorites.contains(post) %}
+                    <i class="bi bi-bookmark-star-fill"
+                       id="favorite-{{ post.id }}"
+                       onclick="favorite({{ post.id }})"
+                       role="img"
+                       style="cursor: pointer; color: red; font-size: 2rem;"
+                    ></i>
+                {% else %}
+                    <i class="bi bi-bookmark-star"
+                       id="favorite-{{ post.id }}"
+                       onclick="favorite({{ post.id }})"
+                       role="img"
+                       style="cursor: pointer; color: currentColor; font-size: 2rem;"
+                    ></i>
+                {% endif %}
+            </li>
+        {% endif %}
+        <li class="list-inline-item"><h1>{{ post.title }}</h1></li>
+    </ul>
 
     <ul class="list-inline">
         <li class="list-inline-item">author: {{ post.admin.username }}</li>
         <li class="list-inline-item">created: {{ post.createdAt|date('d.m.Y H:i:s') }}</li>
         <li class="list-inline-item">
-            rate:
-            {{ post.numberOfGrades == 0 ? 0 : post.sumOfGrades / post.numberOfGrades }}
+            rating: {{ rating }}
         </li>
     </ul>
+
+    {% if app.user %}
+        <fieldset class="rating" data-post-id="{{ post.id }}">
+            <div class="rating_group">
+                {% for value in 1..5 %}
+                    <input class="rating_star" type="radio" name="rating" value="{{ value }}" title="{{ value }}"
+                        {{ value == grade ? 'checked' : '' }}
+                    >
+                {% endfor %}
+            </div>
+        </fieldset>
+    {% endif %}
 
     {% set file = post.getFile %}
     {% if file != null %}
@@ -20,7 +52,6 @@
     {% else %}
         <hr>
     {% endif %}
-
 
     {% if post.onlyForRegistered and not app.user %}
         <div class="card-body bg-secondary text-center">
@@ -45,10 +76,22 @@
 {#            </div>#}
 {#        {% else %}#}
 {#            <div class="alert alert-secondary" role="alert">#}
-{#                There are no comments yet.#}
+{#                There are no com`ments yet.#}
 {#            </div>#}
 {#        {% endfor %}#}
     {% endif %}
 {% endblock %}
 
 {% block sidebar %}{{ knp_menu_render('usercategories') }}{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js">
+        const axios = require('axios').default;
+    </script>
+    <script src="{{ asset('js/favorite.js') }}"></script>
+    <script src="{{ asset('js/rating.js') }}"></script>
+{% endblock %}
+
+{% block head_css %}
+    <link rel="stylesheet" href="{{ asset('css/rating.css') }}">
+{% endblock %}

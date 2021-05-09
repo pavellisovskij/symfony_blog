@@ -36,8 +36,12 @@
                     <li class="list-inline-item">author: {{ post.admin.username }}</li>
                     <li class="list-inline-item">created: {{ post.createdAt|date('d.m.Y H:i:s') }}</li>
                     <li class="list-inline-item">
-                        rate:
-                        {{ post.numberOfGrades == 0 ? 0 : post.sumOfGrades / post.numberOfGrades }}
+                        {% set numberOfGrades = post.getRatings.count %}
+                        {% set sumOfGrades = 0 %}
+                        {% for grade in post.getRatings %}
+                            {% set sumOfGrades = sumOfGrades + grade.getGrade %}
+                        {% endfor %}
+                        rating: {{ numberOfGrades == 0 ? 0 : sumOfGrades / numberOfGrades }}
                     </li>
                 </ul>
             </div>
